@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import * as THREE from "three";
 import coach from "../asset/coauch.glb";
+import coach2 from "../asset/coauch2.glb";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"; // GLTFLoader 추가
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
@@ -25,7 +26,7 @@ export default function LoadGlb({ canvasParentRef }) {
 
     // Scene
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog("silver", 3, 7);
+    // scene.fog = new THREE.Fog("silver", 3, 7);
 
     // Camera
     const camera = new THREE.PerspectiveCamera(
@@ -38,9 +39,12 @@ export default function LoadGlb({ canvasParentRef }) {
     camera.position.z = 0.5;
     scene.add(camera);
 
-    const light = new THREE.DirectionalLight(0xffffff, 2);
-    light.position.x = 3;
-    light.position.y = 3;
+    const ambientLight = new THREE.AmbientLight("white", 1);
+    scene.add(ambientLight);
+
+    const light = new THREE.DirectionalLight(0xffffff, 3);
+    light.position.x = 2;
+    light.position.y = 2;
     light.position.z = 5;
     scene.add(light);
 
@@ -52,19 +56,19 @@ export default function LoadGlb({ canvasParentRef }) {
     const loader = new GLTFLoader();
     // const glbPath = "/src/asset/coauch.glb"; // GLB 파일의 경로로 변경
 
-    loader.load(coach, (gltf) => {
+    loader.load(coach2, (gltf) => {
       // GLB 모델 로드 완료 시 호출되는 콜백 함수
-      gltf.scene.traverse((child) => {
-        if (child.isMesh) {
-          // Accessing and modifying the material
-          const newMaterial = new THREE.MeshStandardMaterial({
-            color: 0xffffff,
-            roughness: 0.2,
-            metalness: 1,
-          }); // Create a new material
-          child.material = newMaterial; // Assign the new material to the mesh
-        }
-      });
+      // gltf.scene.traverse((child) => {
+      // if (child.isMesh) {
+      //   // Accessing and modifying the material
+      //   const newMaterial = new THREE.MeshStandardMaterial({
+      //     color: 0xffffff,
+      //     roughness: 0.2,
+      //     metalness: 1,
+      //   }); // Create a new material
+      //   child.material = newMaterial; // Assign the new material to the mesh
+      // }
+      // });
       scene.add(gltf.scene);
     });
 
