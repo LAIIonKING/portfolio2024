@@ -39,14 +39,27 @@ export default function LoadGlb({ canvasParentRef }) {
     camera.position.z = 0.5;
     scene.add(camera);
 
+    // Light
     const ambientLight = new THREE.AmbientLight("white", 1);
     scene.add(ambientLight);
 
-    const light = new THREE.DirectionalLight(0xffffff, 3);
-    light.position.x = 2;
-    light.position.y = 2;
-    light.position.z = 5;
+    const redlight = new THREE.DirectionalLight("white", 0.3);
+    // light.position.x = -3;
+    redlight.position.set(0, 4, 8);
+    scene.add(redlight);
+
+    const light = new THREE.DirectionalLight("white", 0.3);
+    // light.position.x = -3;
+    light.position.set(3, 1, 6);
     scene.add(light);
+
+    const toplight = new THREE.DirectionalLight("white", 1);
+    // light.position.x = -3;
+    toplight.position.set(0, 6, 0);
+    scene.add(toplight);
+
+    const lightHelper = new THREE.DirectionalLightHelper(toplight);
+    scene.add(lightHelper);
 
     //control
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -58,30 +71,28 @@ export default function LoadGlb({ canvasParentRef }) {
 
     loader.load(coach2, (gltf) => {
       // GLB 모델 로드 완료 시 호출되는 콜백 함수
-      // gltf.scene.traverse((child) => {
-      // if (child.isMesh) {
-      //   // Accessing and modifying the material
-      //   const newMaterial = new THREE.MeshStandardMaterial({
-      //     color: 0xffffff,
-      //     roughness: 0.2,
-      //     metalness: 1,
-      //   }); // Create a new material
-      //   child.material = newMaterial; // Assign the new material to the mesh
-      // }
-      // });
+      gltf.scene.traverse((child) => {
+        if (child.isMesh) {
+          // Accessing and modifying the material
+          const newMaterial = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            roughness: 0.3,
+            metalness: 0.9,
+          }); // Create a new material
+          child.material = newMaterial; // Assign the new material to the mesh
+        }
+      });
       scene.add(gltf.scene);
     });
 
-    // Mesh
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      roughness: 0.2,
-      metalness: 1,
-    });
-
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+    //floor
+    const floorMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(100, 100),
+      new THREE.MeshStandardMaterial({ color: "white" })
+    );
+    floorMesh.rotation.x = -Math.PI / 2;
+    floorMesh.receiveShadow = true;
+    scene.add(floorMesh);
 
     // Animation
     let time = Date.now();
