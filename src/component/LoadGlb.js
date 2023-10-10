@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import * as THREE from "three";
 import coach from "../asset/coauch.glb";
-import coach2 from "../asset/coauch2.glb";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"; // GLTFLoader 추가
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { Pillow } from "./Pillow";
 
 export default function LoadGlb({ canvasParentRef }) {
   const canvasRef = useRef();
@@ -65,25 +65,20 @@ export default function LoadGlb({ canvasParentRef }) {
     const controls = new OrbitControls(camera, renderer.domElement);
     // controls.update();
 
-    // GLTFLoader를 이용하여 GLB 파일 로드
     const loader = new GLTFLoader();
-    // const glbPath = "/src/asset/coauch.glb"; // GLB 파일의 경로로 변경
 
-    loader.load(coach2, (gltf) => {
-      // GLB 모델 로드 완료 시 호출되는 콜백 함수
-      gltf.scene.traverse((child) => {
-        if (child.isMesh) {
-          // Accessing and modifying the material
-          const newMaterial = new THREE.MeshStandardMaterial({
-            color: 0xffffff,
-            roughness: 0.3,
-            metalness: 0.9,
-          }); // Create a new material
-          child.material = newMaterial; // Assign the new material to the mesh
-        }
+    const pillows = [];
+    let pillow;
+    for (let i = 0; i < 5; i++) {
+      pillow = new Pillow({
+        index: i,
+        scene,
+        // cannonWorld,
+        loader,
+        z: -i * 0.8,
       });
-      scene.add(gltf.scene);
-    });
+      pillows.push(pillow);
+    }
 
     //floor
     const floorMesh = new THREE.Mesh(
