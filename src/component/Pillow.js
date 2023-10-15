@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import coach2 from "../asset/coauch2.glb";
+import * as THREE from 'three';
+import coach2 from '../asset/coauch2.glb';
 
 export class Pillow {
   constructor(info) {
