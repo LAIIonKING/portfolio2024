@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import * as THREE from 'three';
-import coach from '../asset/coauch.glb';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'; // GLTFLoader 추가
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { Pillow } from './Pillow';
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import * as THREE from "three";
+import coach from "../asset/coauch.glb";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"; // GLTFLoader 추가
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { Pillow } from "./Pillow";
+import * as CANNON from "cannon-es";
 
 export default function LoadGlb({ canvasParentRef }) {
   const canvasRef = useRef();
@@ -39,20 +40,20 @@ export default function LoadGlb({ canvasParentRef }) {
     scene.add(camera);
 
     // Light
-    const ambientLight = new THREE.AmbientLight('white', 1);
+    const ambientLight = new THREE.AmbientLight("white", 1);
     scene.add(ambientLight);
 
-    const redlight = new THREE.DirectionalLight('white', 0.3);
+    const redlight = new THREE.DirectionalLight("white", 0.3);
     // light.position.x = -3;
     redlight.position.set(0, 4, 8);
     scene.add(redlight);
 
-    const light = new THREE.DirectionalLight('white', 0.3);
+    const light = new THREE.DirectionalLight("white", 0.3);
     // light.position.x = -3;
     light.position.set(3, 1, 6);
     scene.add(light);
 
-    const toplight = new THREE.DirectionalLight('white', 1);
+    const toplight = new THREE.DirectionalLight("white", 1);
     // light.position.x = -3;
     toplight.position.set(0, 6, 0);
     scene.add(toplight);
@@ -64,6 +65,26 @@ export default function LoadGlb({ canvasParentRef }) {
     const controls = new OrbitControls(camera, renderer.domElement);
     // controls.update();
 
+    // Cannon(물리 엔진)
+    const cannonWorld = new CANNON.World();
+    cannonWorld.gravity.set(0, -10, 0);
+
+    // 성능을 위한 세팅
+    // cannonWorld.allowSleep = true;
+    cannonWorld.broadphase = new CANNON.SAPBroadphase(cannonWorld);
+    // Contact Material
+    const defaultMaterial = new CANNON.Material("default");
+    const defaultContactMaterial = new CANNON.ContactMaterial(
+      defaultMaterial,
+      defaultMaterial,
+      {
+        friction: 0.01,
+        restitution: 0.9,
+      }
+    );
+    cannonWorld.defaultContactMaterial = defaultContactMaterial;
+    cannonWorld.addContactMaterial(defaultContactMaterial);
+
     const loader = new GLTFLoader();
 
     const pillows = [];
@@ -72,9 +93,10 @@ export default function LoadGlb({ canvasParentRef }) {
       pillow = new Pillow({
         index: i,
         scene,
-        // cannonWorld,
         loader,
         z: -i * 0.8,
+        cannonWorld,
+        defaultContactMaterial,
       });
       pillows.push(pillow);
     }
@@ -90,7 +112,7 @@ export default function LoadGlb({ canvasParentRef }) {
 
     const boxMesh = new THREE.Mesh(
       new THREE.BoxGeometry(5, 5, 3),
-      new THREE.MeshStandardMaterial({ color: 'white', side: THREE.DoubleSide })
+      new THREE.MeshStandardMaterial({ color: "white", side: THREE.DoubleSide })
     );
     boxMesh.receiveShadow = true;
     scene.add(boxMesh);
@@ -102,6 +124,7 @@ export default function LoadGlb({ canvasParentRef }) {
       const newTime = Date.now();
       const deltaTime = newTime - time;
       time = newTime;
+      cannonWorld.step(1 / 60, deltaTime, 3);
 
       renderer.render(scene, camera);
 
@@ -127,14 +150,14 @@ export default function LoadGlb({ canvasParentRef }) {
     }
 
     // Event listeners
-    window.addEventListener('resize', setSize);
+    window.addEventListener("resize", setSize);
 
     // Start animation
     draw();
 
     // Cleanup
     return () => {
-      window.removeEventListener('resize', setSize);
+      window.removeEventListener("resize", setSize);
     };
   }, []);
 

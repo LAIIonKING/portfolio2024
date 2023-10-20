@@ -1,16 +1,18 @@
-import * as THREE from 'three';
-import coach2 from '../asset/coauch2.glb';
+import * as THREE from "three";
+import coach2 from "../asset/coauch2.glb";
+import { Box, Vec3, Body } from "cannon-es";
 
 export class Pillow {
   constructor(info) {
     this.scene = info.scene;
     this.cannonWorld = info.cannonWorld;
+    this.defaultContactMaterial = info.defaultContactMaterial;
 
     this.index = info.index;
 
-    // this.width = info.width || 0.6;
-    // this.height = info.height || 1;
-    // this.depth = info.depth || 0.2;
+    this.width = info.width || 1;
+    this.height = info.height || 1;
+    this.depth = info.depth || 1;
 
     this.x = info.x || 0;
     this.y = info.y || 0.5;
@@ -37,22 +39,26 @@ export class Pillow {
       this.modelMesh.position.set(this.x, this.y, this.z);
 
       this.scene.add(gltf.scene);
-      // this.setCannonBody();
+      this.setCannonBody();
     });
   }
 
   setCannonBody() {
-    // const shape = new Box(new Vec3(this.width/2, this.height/2, this.depth/2));
-    // this.cannonBody = new Body({
-    // 	mass: 1,
-    // 	position: new Vec3(this.x, this.y, this.z),
-    // 	shape
-    // });
-    // this.cannonBody.quaternion.setFromAxisAngle(
-    // 	new Vec3(0, 1, 0), // y축
-    // 	this.rotationY
-    // );
-    // this.modelMesh.cannonBody = this.cannonBody;
-    // this.cannonWorld.addBody(this.cannonBody);
+    const material = this.defaultContactMaterial;
+    const shape = new Box(
+      new Vec3(this.width / 2, this.height / 2, this.depth / 2)
+    );
+    this.cannonBody = new Body({
+      mass: 1,
+      position: new Vec3(this.x, this.y, this.z),
+      shape,
+      material,
+    });
+    this.cannonBody.quaternion.setFromAxisAngle(
+      new Vec3(0, 1, 0), // y축
+      this.rotationY
+    );
+    this.modelMesh.cannonBody = this.cannonBody;
+    this.cannonWorld.addBody(this.cannonBody);
   }
 }
