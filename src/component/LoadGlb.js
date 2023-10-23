@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from "react";
-import gsap from "gsap";
-import * as THREE from "three";
-import coach from "../asset/coauch.glb";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"; // GLTFLoader 추가
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { Pillow } from "./Pillow";
-import * as CANNON from "cannon-es";
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import * as THREE from 'three';
+import coach from '../asset/coauch.glb';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'; // GLTFLoader 추가
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { Pillow } from './Pillow';
+import * as CANNON from 'cannon-es';
 
 export default function LoadGlb({ canvasParentRef }) {
   const canvasRef = useRef();
@@ -40,20 +40,20 @@ export default function LoadGlb({ canvasParentRef }) {
     scene.add(camera);
 
     // Light
-    const ambientLight = new THREE.AmbientLight("white", 1);
+    const ambientLight = new THREE.AmbientLight('white', 1);
     scene.add(ambientLight);
 
-    const redlight = new THREE.DirectionalLight("white", 0.3);
+    const redlight = new THREE.DirectionalLight('white', 0.3);
     // light.position.x = -3;
     redlight.position.set(0, 4, 8);
     scene.add(redlight);
 
-    const light = new THREE.DirectionalLight("white", 0.3);
+    const light = new THREE.DirectionalLight('white', 0.3);
     // light.position.x = -3;
     light.position.set(3, 1, 6);
     scene.add(light);
 
-    const toplight = new THREE.DirectionalLight("white", 1);
+    const toplight = new THREE.DirectionalLight('white', 1);
     // light.position.x = -3;
     toplight.position.set(0, 6, 0);
     scene.add(toplight);
@@ -69,11 +69,31 @@ export default function LoadGlb({ canvasParentRef }) {
     const cannonWorld = new CANNON.World();
     cannonWorld.gravity.set(0, -10, 0);
 
+    const floorShape = new CANNON.Plane();
+    const floorBody = new CANNON.Body({
+      mass: 0,
+      position: new CANNON.Vec3(0, 0, 0),
+      shape: floorShape,
+    });
+    floorBody.quaternion.setFromAxisAngle(
+      new CANNON.Vec3(-1, 0, 0),
+      Math.PI / 2
+    );
+    cannonWorld.addBody(floorBody);
+
+    const boxShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5));
+    const boxBody = new CANNON.Body({
+      mass: 1,
+      position: new CANNON.Vec3(0, 3, 0),
+      shape: boxShape,
+    });
+    cannonWorld.addBody(boxBody);
+
     // 성능을 위한 세팅
     // cannonWorld.allowSleep = true;
     cannonWorld.broadphase = new CANNON.SAPBroadphase(cannonWorld);
     // Contact Material
-    const defaultMaterial = new CANNON.Material("default");
+    const defaultMaterial = new CANNON.Material('default');
     const defaultContactMaterial = new CANNON.ContactMaterial(
       defaultMaterial,
       defaultMaterial,
@@ -94,6 +114,7 @@ export default function LoadGlb({ canvasParentRef }) {
         index: i,
         scene,
         loader,
+        y: 3,
         z: -i * 0.8,
         cannonWorld,
         defaultContactMaterial,
@@ -102,20 +123,21 @@ export default function LoadGlb({ canvasParentRef }) {
     }
 
     //floor
-    // const floorMesh = new THREE.Mesh(
-    //   new THREE.PlaneGeometry(100, 100),
-    //   new THREE.MeshStandardMaterial({ color: 'white' })
-    // );
-    // floorMesh.rotation.x = -Math.PI / 2;
-    // floorMesh.receiveShadow = true;
-    // scene.add(floorMesh);
-
-    const boxMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(5, 5, 3),
-      new THREE.MeshStandardMaterial({ color: "white", side: THREE.DoubleSide })
+    const floorMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(100, 100),
+      new THREE.MeshStandardMaterial({ color: 'white' })
     );
-    boxMesh.receiveShadow = true;
-    scene.add(boxMesh);
+    floorMesh.rotation.x = -Math.PI / 2;
+    floorMesh.receiveShadow = true;
+    scene.add(floorMesh);
+
+    //box
+    // const boxMesh = new THREE.Mesh(
+    //   new THREE.BoxGeometry(5, 5, 3),
+    //   new THREE.MeshStandardMaterial({ color: 'white', side: THREE.DoubleSide })
+    // );
+    // boxMesh.receiveShadow = true;
+    // scene.add(boxMesh);
 
     // Animation
     let time = Date.now();
@@ -125,6 +147,14 @@ export default function LoadGlb({ canvasParentRef }) {
       const deltaTime = newTime - time;
       time = newTime;
       cannonWorld.step(1 / 60, deltaTime, 3);
+      floorMesh.position.copy(floorBody.position);
+      // boxMesh.position.copy(boxBody.position);
+
+      pillows.forEach((el) => {
+        if (el.cannonBody) {
+          return el.modelMesh.position.copy(el.cannonBody.position);
+        }
+      });
 
       renderer.render(scene, camera);
 
@@ -150,14 +180,14 @@ export default function LoadGlb({ canvasParentRef }) {
     }
 
     // Event listeners
-    window.addEventListener("resize", setSize);
+    window.addEventListener('resize', setSize);
 
     // Start animation
     draw();
 
     // Cleanup
     return () => {
-      window.removeEventListener("resize", setSize);
+      window.removeEventListener('resize', setSize);
     };
   }, []);
 

@@ -1,6 +1,6 @@
-import * as THREE from "three";
-import coach2 from "../asset/coauch2.glb";
-import { Box, Vec3, Body } from "cannon-es";
+import * as THREE from 'three';
+import coach2 from '../asset/coauch2.glb';
+import { Box, Vec3, Body } from 'cannon-es';
 
 export class Pillow {
   constructor(info) {
@@ -54,10 +54,6 @@ export class Pillow {
       shape,
       material,
     });
-    this.cannonBody.quaternion.setFromAxisAngle(
-      new Vec3(0, 1, 0), // y축
-      this.rotationY
-    );
     this.modelMesh.cannonBody = this.cannonBody;
     this.cannonWorld.addBody(this.cannonBody);
   }
