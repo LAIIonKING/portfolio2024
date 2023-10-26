@@ -1,6 +1,6 @@
-import * as THREE from 'three';
-import coach2 from '../asset/coauch2.glb';
-import { Box, Vec3, Body } from 'cannon-es';
+import * as THREE from "three";
+import coach2 from "../asset/coauch2.glb";
+import { Box, Vec3, Body, Material, ContactMaterial } from "cannon-es";
 
 export class Pillow {
   constructor(info) {
@@ -44,15 +44,28 @@ export class Pillow {
   }
 
   setCannonBody() {
-    const material = this.defaultContactMaterial;
+    // const material = this.defaultContactMaterial;
+    const defaultMaterial = new Material("default");
+    const defaultContactMaterial = new ContactMaterial(
+      defaultMaterial,
+      defaultMaterial,
+      {
+        friction: 0.01,
+        restitution: 0.8,
+      }
+    );
+    this.cannonWorld.defaultContactMaterial = defaultContactMaterial;
+    this.cannonWorld.addContactMaterial(defaultContactMaterial);
+
     const shape = new Box(
-      new Vec3(this.width / 2, this.height / 2, this.depth / 2)
+      new Vec3(this.width / 3, this.height / 3, this.depth / 2)
     );
     this.cannonBody = new Body({
       mass: 1,
       position: new Vec3(this.x, this.y, this.z),
       shape,
-      material,
+      // material,
+      defaultContactMaterial,
     });
     this.modelMesh.cannonBody = this.cannonBody;
     this.cannonWorld.addBody(this.cannonBody);
