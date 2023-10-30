@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from "react";
-import gsap from "gsap";
-import * as THREE from "three";
-import coach from "../asset/coauch.glb";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"; // GLTFLoader 추가
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { Pillow } from "./Pillow";
-import * as CANNON from "cannon-es";
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import * as THREE from 'three';
+import coach from '../asset/coauch.glb';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'; // GLTFLoader 추가
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { Pillow } from './Pillow';
+import * as CANNON from 'cannon-es';
 
 export default function LoadGlb({ canvasParentRef }) {
   const canvasRef = useRef();
@@ -52,20 +52,20 @@ export default function LoadGlb({ canvasParentRef }) {
     scene.add(camera);
 
     // Light
-    const ambientLight = new THREE.AmbientLight("white", 1);
+    const ambientLight = new THREE.AmbientLight('white', 1);
     scene.add(ambientLight);
 
-    const redlight = new THREE.DirectionalLight("white", 0.3);
+    const redlight = new THREE.DirectionalLight('white', 0.3);
     // light.position.x = -3;
     redlight.position.set(0, 4, 8);
     scene.add(redlight);
 
-    const light = new THREE.DirectionalLight("white", 0.3);
+    const light = new THREE.DirectionalLight('white', 0.3);
     // light.position.x = -3;
     light.position.set(3, 1, 6);
     scene.add(light);
 
-    const toplight = new THREE.DirectionalLight("white", 1);
+    const toplight = new THREE.DirectionalLight('white', 1);
     // light.position.x = -3;
     toplight.position.set(0, 6, 0);
     scene.add(toplight);
@@ -79,13 +79,13 @@ export default function LoadGlb({ canvasParentRef }) {
 
     // Cannon(물리 엔진)
     const cannonWorld = new CANNON.World();
-    cannonWorld.gravity.set(1, 0, 0);
+    cannonWorld.gravity.set(0, 0, 0);
 
     //room Cannon
     const floorShape = new CANNON.Plane();
     const floorBody = new CANNON.Body({
       mass: 0,
-      position: new CANNON.Vec3(0, -2, 0),
+      position: new CANNON.Vec3(0, -1, 0),
       shape: floorShape,
     });
     floorBody.quaternion.setFromAxisAngle(
@@ -96,7 +96,7 @@ export default function LoadGlb({ canvasParentRef }) {
 
     const topBody = new CANNON.Body({
       mass: 0,
-      position: new CANNON.Vec3(0, 2, 0),
+      position: new CANNON.Vec3(0, 1, 0),
       shape: floorShape,
     });
     topBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2);
@@ -105,7 +105,8 @@ export default function LoadGlb({ canvasParentRef }) {
     const rightBody = new CANNON.Body({
       mass: 0,
       position: new CANNON.Vec3(
-        (canvasParentRef.current.offsetWidth - 2) / 300,
+        // (canvasParentRef.current.offsetWidth - 2) / 300,
+        2,
         0,
         0
       ),
@@ -119,7 +120,7 @@ export default function LoadGlb({ canvasParentRef }) {
 
     const leftBody = new CANNON.Body({
       mass: 0,
-      position: new CANNON.Vec3(-3, 0, 0),
+      position: new CANNON.Vec3(-2, 0, 0),
       shape: floorShape,
     });
     leftBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI / 2);
@@ -153,13 +154,13 @@ export default function LoadGlb({ canvasParentRef }) {
 
     const pillows = [];
     let pillow;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       pillow = new Pillow({
         index: i,
         scene,
         loader,
-        x: i - 2,
-        y: -1,
+        x: i - 1,
+        y: 0,
         // z: -i * 0.8,
         z: 2,
         cannonWorld,
@@ -229,14 +230,52 @@ export default function LoadGlb({ canvasParentRef }) {
     }
 
     // Event listeners
-    window.addEventListener("resize", setSize);
+    window.addEventListener('resize', setSize);
+
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    function checkIntersects() {
+      raycaster.setFromCamera(mouse, camera);
+
+      const intersects = raycaster.intersectObjects(scene.children);
+
+      for (const item of intersects) {
+        if (item.object.cannonBody) {
+          console.log(intersects[0].object.cannonBody);
+
+          item.object.cannonBody.applyForce(
+            new CANNON.Vec3(-50, 0, 0),
+            new CANNON.Vec3(0, 0, 0)
+          );
+          break;
+        }
+      }
+
+      // if (intersects[0].object.cannonBody) {
+      // 	intersects[0].object.cannonBody.applyForce(
+      // 		new CANNON.Vec3(0, 0, -100),
+      // 		new CANNON.Vec3(0, 0, 0)
+      // 	);
+      // }
+    }
+    canvas.addEventListener('click', (e) => {
+      // if (preventDragClick.mouseMoved) return;
+
+      mouse.x = (e.clientX / canvas.clientWidth) * 2 - 1;
+      mouse.y = -((e.clientY / canvas.clientHeight) * 2 - 1.3);
+
+      console.log(mouse);
+
+      checkIntersects();
+    });
 
     // Start animation
     draw();
 
     // Cleanup
     return () => {
-      window.removeEventListener("resize", setSize);
+      window.removeEventListener('resize', setSize);
     };
   }, []);
 
