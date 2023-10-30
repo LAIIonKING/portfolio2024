@@ -30,24 +30,30 @@ export default function LoadGlb({ canvasParentRef }) {
     // scene.fog = new THREE.Fog("silver", 3, 7);
 
     // Camera
-    // const camera = new THREE.PerspectiveCamera(
-    //   60,
-    //   window.innerWidth / window.innerHeight,
-    //   0.1,
-    //   1000
-    // );
-    const camera = new THREE.OrthographicCamera(
-      -(
-        canvasParentRef.current.offsetWidth /
-        canvasParentRef.current.offsetHeight
-      ),
-      canvasParentRef.current.offsetWidth /
-        canvasParentRef.current.offsetHeight,
-      1,
-      -1,
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
+    // const camera = new THREE.OrthographicCamera(
+    //   -(
+    //     canvasParentRef.current.offsetWidth /
+    //     canvasParentRef.current.offsetHeight
+    //   ),
+    //   canvasParentRef.current.offsetWidth /
+    //     canvasParentRef.current.offsetHeight,
+    //   1,
+    //   -1,
+    //   0.1,
+    //   1000
+    // );
+    const hFOV =
+      (2 *
+        Math.atan(Math.tan((camera.fov * Math.PI) / 180 / 2) * camera.aspect) *
+        180) /
+      Math.PI; // degrees
+    camera.fov = hFOV;
     camera.position.set(0, 0, 5);
     scene.add(camera);
 
@@ -79,7 +85,7 @@ export default function LoadGlb({ canvasParentRef }) {
 
     // Cannon(물리 엔진)
     const cannonWorld = new CANNON.World();
-    cannonWorld.gravity.set(1, 0, 0);
+    cannonWorld.gravity.set(0, -10, 0);
 
     //room Cannon
     const floorShape = new CANNON.Plane();
@@ -217,9 +223,22 @@ export default function LoadGlb({ canvasParentRef }) {
     //   y: 2,
     //   z: 3,
     // });
+    const fov = 50;
+    const planeAspectRatio = 16 / 9;
 
     function setSize() {
       camera.aspect = window.innerWidth / window.innerHeight;
+
+      if (camera.aspect > planeAspectRatio) {
+        // window too large
+        const cameraHeight = Math.tan(THREE.MathUtils.degToRad(fov / 2));
+        const ratio = camera.aspect / planeAspectRatio;
+        const newCameraHeight = cameraHeight / ratio;
+        camera.fov = THREE.MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2;
+      } else {
+        // window too narrow
+        camera.fov = fov;
+      }
       camera.updateProjectionMatrix();
       renderer.setSize(
         canvasParentRef.current.offsetWidth - 2,
