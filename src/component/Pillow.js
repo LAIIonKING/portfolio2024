@@ -1,6 +1,6 @@
-import * as THREE from 'three';
-import coach2 from '../asset/coauch2.glb';
-import { Box, Vec3, Body, Material, ContactMaterial } from 'cannon-es';
+import * as THREE from "three";
+import coach2 from "../asset/coauch2.glb";
+import { Box, Vec3, Body, Material, ContactMaterial } from "cannon-es";
 
 export class Pillow {
   constructor(info) {
@@ -9,6 +9,7 @@ export class Pillow {
     this.defaultContactMaterial = info.defaultContactMaterial;
 
     this.index = info.index;
+    this.name = info.name;
 
     this.width = 0.35;
     this.height = 0.22;
@@ -34,7 +35,7 @@ export class Pillow {
         }
       });
       this.modelMesh = gltf.scene.children[0];
-      // this.modelMesh.name = `${this.index}번 도미노`;
+      this.modelMesh.name = this.name;
       this.modelMesh.castShadow = true;
       this.modelMesh.scale.set(this.width, this.height, this.depth);
       this.modelMesh.position.set(this.x, this.y, this.z);
@@ -46,15 +47,11 @@ export class Pillow {
 
   setCannonBody() {
     // const material = this.defaultContactMaterial;
-    const defaultMaterial = new Material('default');
-    const defaultContactMaterial = new ContactMaterial(
-      defaultMaterial,
-      defaultMaterial,
-      {
-        friction: 0.01,
-        restitution: 0.8,
-      }
-    );
+    const defaultMaterial = new Material("default");
+    const defaultContactMaterial = new ContactMaterial(defaultMaterial, {
+      friction: 0.01,
+      restitution: 0.8,
+    });
     this.cannonWorld.defaultContactMaterial = defaultContactMaterial;
     this.cannonWorld.addContactMaterial(defaultContactMaterial);
 
@@ -66,6 +63,14 @@ export class Pillow {
       // material,
       defaultContactMaterial,
     });
+    this.cannonBody.applyForce(
+      new Vec3(
+        Math.random() * 20 - 10,
+        Math.random() * 20 - 10,
+        Math.random() * 20 - 10
+      ),
+      new Vec3(0, 0, 0)
+    );
     this.modelMesh.cannonBody = this.cannonBody;
     this.cannonWorld.addBody(this.cannonBody);
   }
