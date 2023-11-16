@@ -39,7 +39,6 @@ export class Pillow {
       this.modelMesh.castShadow = true;
       this.modelMesh.scale.set(this.width, this.height, this.depth);
       this.modelMesh.position.set(this.x, this.y, this.z);
-
       this.scene.add(gltf.scene);
       this.setCannonBody();
     });

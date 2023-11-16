@@ -4,7 +4,8 @@ import { Route, Routes } from "react-router-dom";
 import Layout from "./component/Layout";
 
 const Home = lazy(() => import("./page/Home"));
-const Project = lazy(() => import("./page/Project"));
+const SilverFactory = lazy(() => import("./page/SilverFactory"));
+const Bricks = lazy(() => import("./page/Bricks"));
 
 function App() {
   return (
@@ -20,10 +21,18 @@ function App() {
             }
           />
           <Route
-            path="/project/:title"
+            path="/project/silverfactory"
             element={
               <Suspense fallback={<div style={{ height: "100vh" }}></div>}>
-                <Project />
+                <SilverFactory />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/project/bricks"
+            element={
+              <Suspense fallback={<div style={{ height: "100vh" }}></div>}>
+                <Bricks />
               </Suspense>
             }
           />

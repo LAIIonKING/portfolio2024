@@ -4,11 +4,29 @@ import * as THREE from "three";
 import sofa from "../asset/Sofa.glb";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"; // GLTFLoader 추가
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { Pillow } from "./Pillow";
+import { Pillow } from "../component/Pillow";
 import * as CANNON from "cannon-es";
-import { CannonPlane } from "./CannonPlane";
+import { CannonPlane } from "../component/CannonPlane";
 
-export default function LoadGlb({ canvasParentRef }) {
+// export default function SilverFactory() {
+//   return (
+//     <div>
+//       {/* <h1 className="text-8xl text-white text-center font-dm font-normal my-6">
+//         SILVER FACTORY
+//       </h1> */}
+//       <div
+//         className="border border-white mt-8"
+//         style={{ height: "calc(100vh - 150px)" }}
+//         ref={canvasParentRef}
+//       >
+//         <LoadGlb canvasParentRef={canvasParentRef} />
+//       </div>
+//     </div>
+//   );
+// }
+
+export default function SilverFactory() {
+  const canvasParentRef = useRef();
   const canvasRef = useRef();
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -27,7 +45,6 @@ export default function LoadGlb({ canvasParentRef }) {
 
     // Scene
     const scene = new THREE.Scene();
-    // scene.fog = new THREE.Fog("silver", 3, 7);
 
     // Camera
     const camera = new THREE.PerspectiveCamera(
@@ -262,5 +279,13 @@ export default function LoadGlb({ canvasParentRef }) {
     };
   }, []);
 
-  return <canvas ref={canvasRef} />;
+  return (
+    <div
+      className="border border-white mt-8"
+      style={{ height: "calc(100vh - 150px)" }}
+      ref={canvasParentRef}
+    >
+      <canvas ref={canvasRef} />
+    </div>
+  );
 }
