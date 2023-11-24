@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import * as THREE from "three";
-import sofa from "../asset/Sofa.glb";
+import wall from "../asset/wall.glb";
+import brick from "../asset/brick.glb";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"; // GLTFLoader 추가
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
@@ -45,7 +46,7 @@ export default function Bricks() {
         180) /
       Math.PI; // degrees
     camera.fov = hFOV;
-    camera.position.set(0, 0, 2);
+    camera.position.set(0, 0, 6);
     scene.add(camera);
 
     // Light
@@ -75,57 +76,67 @@ export default function Bricks() {
     const textureLoader = new THREE.TextureLoader();
     const textureBaseColor = textureLoader.load(baseColorImg);
     const textureNormalMap = textureLoader.load(normalImg);
-    const textureHeightMap = textureLoader.load(heightImg);
     const textureRoughnessMap = textureLoader.load(roughImg);
 
-    //Plane mesh
-    const geometry = new THREE.PlaneGeometry(10, 10);
-    const material = new THREE.MeshStandardMaterial({
-      // color: 0xffff00,
-      map: textureBaseColor,
-      normalMap: textureNormalMap,
-      displacementMap: textureHeightMap,
-      displacementScale: 0.8,
-      roughnessMap: textureRoughnessMap,
-      roughness: 0.5,
+    const loader = new GLTFLoader();
+
+    loader.load(wall, (gltf) => {
+      // GLB 모델 로드 완료 시 호출되는 콜백 함수
+      gltf.scene.traverse((child) => {
+        if (child.isMesh) {
+          const newMaterial = new THREE.MeshStandardMaterial({
+            color: "#ffffff",
+            roughness: 0.5,
+            map: textureBaseColor,
+            normalMap: textureNormalMap,
+            roughnessMap: textureRoughnessMap,
+          });
+          child.material = newMaterial;
+        }
+      });
+      let modelMesh = gltf.scene.children[0];
+      modelMesh.name = "wall";
+      modelMesh.castShadow = true;
+      modelMesh.position.set(0, 2, 0);
+
+      texturing(modelMesh);
+      scene.add(gltf.scene);
     });
-    const plane = new THREE.Mesh(geometry, material);
-    plane.material.map.wrapS = plane.material.map.wrapT = THREE.RepeatWrapping;
-    plane.material.normalMap.wrapS = plane.material.normalMap.wrapT =
-      THREE.RepeatWrapping;
-    plane.material.displacementMap.wrapS =
-      plane.material.displacementMap.wrapT = THREE.RepeatWrapping;
-    plane.material.roughnessMap.wrapS = plane.material.roughnessMap.wrapT =
-      THREE.RepeatWrapping;
 
-    plane.material.map.repeat.set(10, 10);
-    plane.material.normalMap.repeat.set(10, 10);
-    plane.material.displacementMap.repeat.set(10, 10);
-    plane.material.roughnessMap.repeat.set(10, 10);
-    plane.position.set(0, 0, 0);
-    scene.add(plane);
+    loader.load(brick, (gltf) => {
+      // GLB 모델 로드 완료 시 호출되는 콜백 함수
+      gltf.scene.traverse((child) => {
+        if (child.isMesh) {
+          const newMaterial = new THREE.MeshStandardMaterial({
+            color: "#ffffff",
+            roughness: 0.5,
+            map: textureBaseColor,
+            normalMap: textureNormalMap,
+            roughnessMap: textureRoughnessMap,
+          });
+          child.material = newMaterial;
+        }
+      });
+      let modelMesh = gltf.scene.children[0];
+      modelMesh.name = "brick";
+      modelMesh.castShadow = true;
+      modelMesh.position.set(0.45, 0.55, 0);
 
-    // const loader = new GLTFLoader();
+      // texturing(modelMesh);
+      scene.add(gltf.scene);
+    });
 
-    // loader.load(sofa, (gltf) => {
-    //   // GLB 모델 로드 완료 시 호출되는 콜백 함수
-    //   gltf.scene.traverse((child) => {
-    //     if (child.isMesh) {
-    //       const newMaterial = new THREE.MeshStandardMaterial({
-    //         color: "#A80909",
-    //         roughness: 1,
-    //         // metalness: 0.9,
-    //       }); // Create a new material
-    //       child.material = newMaterial;
-    //     }
-    //   });
-    //   let modelMesh = gltf.scene.children[0];
-    //   modelMesh.name = "sofa";
-    //   modelMesh.castShadow = true;
-    //   modelMesh.position.set(100, 0, 0);
-
-    //   scene.add(gltf.scene);
-    // });
+    const texturing = (modelMesh) => {
+      let modelMap = modelMesh.children[0].material;
+      modelMap.map.wrapS = modelMap.map.wrapT = THREE.RepeatWrapping;
+      modelMap.normalMap.wrapS = modelMap.normalMap.wrapT =
+        THREE.RepeatWrapping;
+      modelMap.roughnessMap.wrapS = modelMap.roughnessMap.wrapT =
+        THREE.RepeatWrapping;
+      modelMap.map.repeat.set(10, 10);
+      modelMap.normalMap.repeat.set(10, 10);
+      modelMap.roughnessMap.repeat.set(10, 10);
+    };
 
     // Animation
     let time = Date.now();
