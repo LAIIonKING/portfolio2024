@@ -6,6 +6,7 @@ import Layout from "./component/Layout";
 const Home = lazy(() => import("./page/Home"));
 const SilverFactory = lazy(() => import("./page/SilverFactory"));
 const Bricks = lazy(() => import("./page/Bricks"));
+const Glass = lazy(() => import("./page/Glass"));
 
 function App() {
   return (
@@ -33,6 +34,14 @@ function App() {
             element={
               <Suspense fallback={<div style={{ height: "100vh" }}></div>}>
                 <Bricks />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/project/glass"
+            element={
+              <Suspense fallback={<div style={{ height: "100vh" }}></div>}>
+                <Glass />
               </Suspense>
             }
           />
