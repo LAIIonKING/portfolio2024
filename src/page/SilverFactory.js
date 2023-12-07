@@ -242,7 +242,6 @@ export default function SilverFactory() {
 
       for (const item of intersects) {
         if (item.object.cannonBody && item.object.name === "pillow") {
-          console.log(item.object.cannonBodym);
           item.object.cannonBody.applyForce(
             new CANNON.Vec3(
               Math.random() * 20 - 10,
