@@ -1,5 +1,10 @@
 import React from 'react';
+import Main from '../component/home/Main';
 
 export default function Home() {
-  return <div>This is a Tailwind CSS example with a blue background.</div>;
+  return (
+    <div>
+      <Main />
+    </div>
+  );
 }

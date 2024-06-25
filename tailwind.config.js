@@ -8,8 +8,15 @@ module.exports = {
       dm: ['DM Serif Text'],
       inter: ['Inter'],
       nanum: ['Nanum Myeongjo'],
+      oi: ['Oi'],
     },
-    extend: {},
+    extend: {
+      colors: {
+        'main-blue': '#3e4cf0',
+        'sub-blue': '#008aff',
+        'main-green': '#54df8a',
+      },
+    },
   },
   plugins: [],
 };
