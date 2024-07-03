@@ -1,0 +1,9 @@
+.projectBg {
+  background-color: rgb(62 76 240);
+  min-height: 100vh;
+  position: relative;
+  top: -50vh;
+  z-index: 1;
+  padding-top: 40vh;
+  color: white;
+}

@@ -15,6 +15,7 @@ module.exports = {
         'main-blue': '#3e4cf0',
         'sub-blue': '#008aff',
         'main-green': '#54df8a',
+        'main-orange': '#ff3f3f',
       },
     },
   },

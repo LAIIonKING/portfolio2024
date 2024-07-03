@@ -143,7 +143,12 @@ export default function Skills() {
   }, []);
 
   return (
-    <div style={{ height: '100vh' }} ref={canvasParentRef}>
+    <div
+      className="h-screen"
+      style={{ position: 'relative', zIndex: 2 }}
+      // style={{ height: '100vh', position }}
+      ref={canvasParentRef}
+    >
       <canvas ref={canvasRef} />
     </div>
   );
