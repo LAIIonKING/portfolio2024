@@ -1,0 +1,117 @@
+.waveMenu {
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.menuback {
+  width: 45px;
+  height: 345px;
+  position: absolute;
+  z-index: 2;
+}
+
+.menu {
+  border-radius: 50px;
+  width: 45px;
+  height: 45px;
+  position: relative;
+  bottom: 45px;
+  border: 2px solid white;
+  opacity: 0%;
+  cursor: pointer;
+}
+
+.openMenu {
+  animation-duration: 0.5s;
+  animation-name: openmenu;
+  animation-fill-mode: forwards;
+}
+.closeMenu {
+  animation-duration: 0.5s;
+  animation-name: closemenu;
+  animation-fill-mode: backwards;
+}
+
+.fadeoutIcon {
+  animation-duration: 0.5s;
+  animation-name: fadeout;
+  animation-fill-mode: forwards;
+}
+.fadeinIcon {
+  animation-duration: 0.5s;
+  animation-name: fadein;
+  animation-fill-mode: backwards;
+}
+
+.navbox {
+  position: absolute;
+  z-index: 20;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  opacity: 0%;
+}
+.navbtn {
+  position: relative;
+  left: 10px;
+  top: 15px;
+  z-index: 20;
+  writing-mode: vertical-rl;
+}
+.fadeoutNav {
+  animation-duration: 0.3s;
+  animation-name: fadeout;
+  animation-fill-mode: forwards;
+}
+.fadeinNav {
+  animation-duration: 0.3s;
+  animation-name: fadein;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0%;
+  }
+  to {
+    opacity: 100%;
+  }
+}
+@keyframes fadeout {
+  from {
+    opacity: 100%;
+  }
+  to {
+    opacity: 0%;
+  }
+}
+
+@keyframes openmenu {
+  0% {
+    opacity: 0%;
+  }
+  30% {
+    opacity: 100%;
+  }
+  100% {
+    opacity: 100%;
+    height: 350px;
+  }
+}
+@keyframes closemenu {
+  0% {
+    height: 350px;
+    opacity: 100%;
+  }
+
+  70% {
+    height: 40px;
+  }
+  100% {
+    opacity: 0%;
+  }
+}
