@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import waveIcon from '../asset/img/waveIcon.png';
 import './Navbar.css';
-import { hover } from '@testing-library/user-event/dist/hover';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -23,7 +22,9 @@ export default function Navbar() {
         <h4 className="text-white">Front End</h4>
         <h4 className="text-white">Developer</h4>
       </div>
+      <div />
       <div
+        className="waveMenuStick"
         onMouseOver={() => setHoverMenu('open')}
         onMouseOut={() => setHoverMenu('close')}
       >

@@ -1,3 +1,9 @@
+.waveMenuStick {
+  position: fixed;
+  right: 20px;
+  z-index: 1000;
+}
+
 .waveMenu {
   border-radius: 50%;
   width: 45px;
@@ -22,6 +28,8 @@
   border: 2px solid white;
   opacity: 0%;
   cursor: pointer;
+  /* background-color: var(--color-red); */
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .openMenu {
