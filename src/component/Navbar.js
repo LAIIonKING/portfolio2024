@@ -9,7 +9,7 @@ export default function Navbar() {
   const [hoverMenu, setHoverMenu] = useState('default');
 
   return (
-    <div className="w-full flex justify-between p-5">
+    <div className="w-full flex justify-between p-5 absolute top-0 z-10">
       <div>
         <h4 className="text-white">SON HYUNJI</h4>
         <h4 className="text-white">2024</h4>

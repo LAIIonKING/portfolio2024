@@ -3,27 +3,29 @@ import React from 'react';
 export default function Detail() {
   return (
     <div
-      className="flex justify-between gap-32 text-white align-text-top"
+      className="flex justify-between gap-32 text-white align-text-top mt-24"
       style={{ padding: '30vh 1.25rem 0px 1.25rem' }}
     >
       <div className="w-2/3">
-        <h1 className="text-7xl font-bold leading-normal mb-5">
-          무한한 성장의 잠재력을 가진 Front End 개발자입니다
+        <h1 className="text-5xl font-semibold leading-normal mb-5">
+          넘치는 에너지와 열정을 가진 <br />
+          Front_end 개발자입니다.
         </h1>
         <h3 className="text-2xl">
-          사용자의 시선으로 기획하고, 감각적인 경험을 제공하겠습니다.
+          무한한 성장과 남다른 추진력으로 개발하겠습니다.
         </h3>
       </div>
       <div className="w-1/3">
-        <p>
-          성장과 적응이 빠르다는 칭찬을 많이 들어서 우주 공간 까지의 한계 없는
-          성장을 한다는 의미를 담아 포트폴리오 컨셉을 잡았습니다. 끊임없는
-          도전을 통해 차원을 넘을 수 있을 때 까지 성장하겠습니다.
+        <p className="mb-4">
+          비, 흙탕물, 눈물, 이슬 등 물은 쓰임새에 따라 이름이 천차만별입니다.
+          각기다른 작은 방울이 모여 바다가 되었습니다. 지식의 바다 위에서
+          끊임없이 도전하겠습니다. 급류에 휩쓸려도 끄떡없이 버틸 자신이
+          있습니다.
         </p>
         <p>
-          사용자의 정확한 이해와 공감을 바탕으로 '어떻게'를 찾아 설계하고 일관성
-          있는 UX/UI를 구현하고자 합니다. 이에 감각적인 디자인도 놓치지 않는
-          디자이너가 되겠습니다.
+          소통과 이해, 기획과 개발
+          <br /> 원활한 이해를 바탕으로, 효율적으로 설계하고 팀원 간 활발한
+          소통으로 사용자 곁에 파도치는 웹페이지를 구현하고자 합니다.
         </p>
       </div>
     </div>

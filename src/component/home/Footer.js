@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="btnBox">
           <button>LinkdIn</button>
           <button>Mail</button>
-          <button>Instagram</button>
+          <button>Github</button>
         </div>
       </div>
     </div>

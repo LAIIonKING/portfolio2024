@@ -1,5 +1,5 @@
-import React from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import React, { useRef } from 'react';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import {
   useGLTF,
   Float,
@@ -11,6 +11,8 @@ import {
   MeshTransmissionMaterial,
 } from '@react-three/drei';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import spring from '../../asset/main_wave.glb';
 
 import { EffectComposer, N8AO, TiltShift2 } from '@react-three/postprocessing';
 
@@ -57,7 +59,7 @@ export default function Figure() {
           floatIntensity={5}
           speed={5}
           rotationIntensity={2}
-          position={[10, 5, 5]}
+          position={[12, 15, -10]}
         >
           <Ice />
         </Float>
@@ -65,16 +67,17 @@ export default function Figure() {
           floatIntensity={5}
           speed={5}
           rotationIntensity={2}
-          position={[10, -5, 0]}
+          position={[25, -10, 0]}
         >
           <Sphere />
         </Float>
         <Float
           floatIntensity={5}
           speed={3}
-          rotationIntensity={3}
-          position={[-5, 0, 0]}
-          rotation={[2.5, 2.5, 3]}
+          rotationIntensity={0.5}
+          position={[-15, 0, 0]}
+          rotation={[2.5, 5, 4]}
+          scale={[0.025, 0.025, 0.025]}
         >
           <Spring />
         </Float>
@@ -82,7 +85,7 @@ export default function Figure() {
           floatIntensity={5}
           speed={5}
           rotationIntensity={2}
-          position={[-20, 0, 0]}
+          position={[-25, 15, 0]}
         >
           <Capsule />
         </Float>
@@ -130,12 +133,7 @@ function Rig() {
 const Ice = (props) => (
   <mesh receiveShadow castShadow {...props}>
     <boxGeometry args={[5, 5, 5]} />
-    <MeshTransmissionMaterial
-      backside
-      backsideThickness={20}
-      thickness={1}
-      chromaticAberration={0.5}
-    />
+    <meshStandardMaterial color="#0479f6" />
   </mesh>
 );
 
@@ -153,30 +151,23 @@ const Capsule = (props) => (
   </mesh>
 );
 
-class CustomSinCurve extends THREE.Curve {
-  constructor(scale = 1) {
-    super();
-    this.scale = scale;
-  }
-
-  getPoint(t, optionalTarget = new THREE.Vector3()) {
-    const tx = t * 3 - 1.5;
-    const ty = Math.sin(2 * Math.PI * t);
-    const tz = 0;
-
-    return optionalTarget.set(tx, ty, tz).multiplyScalar(this.scale);
-  }
+function Spring(props) {
+  // const gltf = useLoader(GLTFLoader, spring);
+  // return <primitive object={gltf.scene} />;
+  const groupRef = useRef();
+  const { nodes, materials } = useGLTF(spring);
+  return (
+    <group ref={groupRef} {...props} dispose={null}>
+      <mesh castShadow receiveShadow geometry={nodes.Sweep.geometry}>
+        {/* <MeshTransmissionMaterial
+          backside
+          backsideThickness={20}
+          thickness={1}
+          chromaticAberration={1}
+          color={'#95DCFF'}
+        /> */}
+        <meshStandardMaterial color="#0479f6" />
+      </mesh>
+    </group>
+  );
 }
-
-const Spring = (props) => (
-  <mesh receiveShadow castShadow {...props}>
-    <tubeGeometry args={[new CustomSinCurve(10), 20, 2, 8, false]} />
-    <MeshTransmissionMaterial
-      backside
-      backsideThickness={20}
-      thickness={1}
-      chromaticAberration={1}
-      color={'#95DCFF'}
-    />{' '}
-  </mesh>
-);
