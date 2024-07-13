@@ -39,8 +39,12 @@ export default function Project() {
           </p>
           <img src={ailabs1} className="rounded-2xl mt-3 w-full" />
           <div className="img2">
-            <img src={ailabs2} className="rounded-xl mt-3 object-contain" />
-            <img src={ailabs3} className="rounded-xl mt-3 object-contain" />
+            <div>
+              <img src={ailabs2} className="rounded-xl mt-3 object-contain" />
+            </div>
+            <div>
+              <img src={ailabs3} className="rounded-xl mt-3 object-contain" />
+            </div>
           </div>
         </div>
       </div>

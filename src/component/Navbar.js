@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import waveIcon from '../asset/img/waveIcon.png';
 import './Navbar.css';
+import useStore from '../useStore';
 
 export default function Navbar() {
-  const navigate = useNavigate();
+  const { setNavigatorClick } = useStore((state) => state);
 
   const [hoverMenu, setHoverMenu] = useState('default');
 
@@ -61,9 +62,21 @@ export default function Navbar() {
               : 'navbox fadeoutNav'
           }
         >
-          <button className="navbtn">Home</button>
-          <button className="navbtn">Projects</button>
-          <button className="navbtn">Contact</button>
+          <button className="navbtn" onClick={() => setNavigatorClick('home')}>
+            Home
+          </button>
+          <button
+            className="navbtn"
+            onClick={() => setNavigatorClick('project')}
+          >
+            Projects
+          </button>
+          <button
+            className="navbtn"
+            onClick={() => setNavigatorClick('footer')}
+          >
+            Contact
+          </button>
         </div>
       </div>
     </div>
