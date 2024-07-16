@@ -14,7 +14,7 @@ export default function Project() {
       <div className="projectBg">
         <div className="projectBox">
           <div className="flex items-baseline gap-3">
-            <h1 className="font-oi text-8xl">AI Labs</h1>
+            <h1 className="font-oi text-5xl md:text-8xl">AI Labs</h1>
             <p>/2024</p>
           </div>
           <div className="flex mt-3 mb-4 gap-3">

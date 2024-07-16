@@ -15,11 +15,11 @@ export default function Navbar() {
         <h4 className="text-white">SON HYUNJI</h4>
         <h4 className="text-white">2024</h4>
       </div>
-      <div>
+      <div className="displaynone">
         <h4 className="text-white">South Korea</h4>
         <h4 className="text-white">Seoul</h4>
       </div>
-      <div>
+      <div className="displaynone">
         <h4 className="text-white">Front End</h4>
         <h4 className="text-white">Developer</h4>
       </div>

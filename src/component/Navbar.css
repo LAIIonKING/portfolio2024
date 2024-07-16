@@ -19,6 +19,12 @@
   z-index: 2;
 }
 
+.displaynone {
+  @media screen and (max-width: 700px) {
+    display: none;
+  }
+}
+
 .menu {
   border-radius: 50px;
   width: 45px;

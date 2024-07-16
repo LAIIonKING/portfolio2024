@@ -11,6 +11,7 @@
   padding: 20px;
   color: var(--color-main-blue);
   width: 100%;
+  align-items: flex-end;
 }
 
 .btnBox {

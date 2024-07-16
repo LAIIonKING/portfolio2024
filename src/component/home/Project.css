@@ -20,10 +20,17 @@
   padding: 0px 80px;
   flex-direction: column;
   gap: 15px;
+  @media screen and (max-width: 1000px) {
+    padding: 0px 30px;
+  }
 }
 
 .img2 {
   display: flex;
   gap: 25px;
   width: 100%;
+  @media screen and (max-width: 1000px) {
+    flex-direction: column;
+    gap: 15px;
+  }
 }

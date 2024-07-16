@@ -1,21 +1,19 @@
 import React from 'react';
+import './Detail.css';
 
 export default function Detail() {
   return (
-    <div
-      className="flex justify-between gap-32 text-white align-text-top mt-24"
-      style={{ padding: '30vh 1.25rem 0px 1.25rem' }}
-    >
-      <div className="w-2/3">
-        <h1 className="text-5xl font-semibold leading-normal mb-5">
+    <div className="detailBox" style={{ padding: '30vh 1.25rem 0px 1.25rem' }}>
+      <div className="detailLeft">
+        <h1 className="text-3xl font-semibold mb-5 leading-normal md:text-5xl md:leading-normal">
           넘치는 에너지와 열정을 가진 <br />
           Front_end 개발자입니다.
         </h1>
-        <h3 className="text-2xl">
+        <h3 className="text-xl md:text-2xl">
           무한한 성장과 남다른 추진력으로 개발하겠습니다.
         </h3>
       </div>
-      <div className="w-1/3">
+      <div className="detailRight">
         <p className="mb-4">
           비, 흙탕물, 눈물, 이슬 등 물은 쓰임새에 따라 이름이 천차만별입니다.
           각기다른 작은 방울이 모여 바다가 되었습니다. 지식의 바다 위에서

@@ -16,7 +16,7 @@ export default function Footer() {
   return (
     <div className="footerBg">
       <div className="contactBox">
-        <h1 className="font-oi text-7xl">CONTACT</h1>
+        <h1 className="font-oi text-4xl md:text-7xl">CONTACT</h1>
         <div className="btnBox">
           <button
             onClick={() =>
