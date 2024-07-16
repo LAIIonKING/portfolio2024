@@ -24,27 +24,22 @@ export default function Figure() {
     height: undefined,
   });
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const handleResize = () => {
-        setWindowSize({
-          // 현재 브라우저의 가로, 세로 길이로 셋팅
-          width: window.innerWidth,
-          height: window.innerHeight,
-        });
-      };
-
-      // resize 이벤트가 발생할 때 handleResize 함수가 실행되도록 한다.
-      window.addEventListener('resize', handleResize);
-
-      // 초기값을 설정할 수 있도록 handleResize 함수를 한 번 실행시킨다.
-      handleResize();
-
-      // 이벤트 리스너를 제거하여 이벤트 리스너가 리사이즈될 때마다 계속해서 생겨나지 않도록 처리한다. (clean up)
-      window.removeEventListener('resize', handleResize);
-    } else {
-      window.removeEventListener('resize', () => {});
+    console.log(windowSize);
+    // Handler to call on window resize
+    function handleResize() {
+      // Set window width/height to state
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
     }
-  }, []); // 컴포넌트가 처음 마운트 될때와 언마운트 될 때 실행
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    // Call handler right away so state gets updated with initial window size
+    handleResize();
+    // Remove event listener on cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div style={{ height: 'calc(100vh - 150px)' }}>
@@ -84,7 +79,7 @@ export default function Figure() {
           floatIntensity={5}
           speed={5}
           rotationIntensity={2}
-          position={[12, 15, -10]}
+          position={windowSize.width > 800 ? [12, 15, -10] : [8, 20, -10]}
         >
           <Ice />
         </Float>
@@ -92,7 +87,7 @@ export default function Figure() {
           floatIntensity={5}
           speed={5}
           rotationIntensity={2}
-          position={[25, -10, 0]}
+          position={windowSize.width > 800 ? [25, -10, 0] : [10, -12, 0]}
         >
           <Sphere />
         </Float>
@@ -100,9 +95,13 @@ export default function Figure() {
           floatIntensity={5}
           speed={3}
           rotationIntensity={0.5}
-          position={[-15, 0, 0]}
+          position={windowSize.width > 800 ? [-15, 0, 0] : [-5, 0, 0]}
           rotation={[2.5, 5, 4]}
-          scale={[0.025, 0.025, 0.025]}
+          scale={
+            windowSize.width > 800
+              ? [0.025, 0.025, 0.025]
+              : [0.018, 0.018, 0.018]
+          }
         >
           <Spring />
         </Float>
@@ -110,7 +109,7 @@ export default function Figure() {
           floatIntensity={5}
           speed={5}
           rotationIntensity={2}
-          position={[-25, 15, 0]}
+          position={windowSize.width > 800 ? [-25, 15, 0] : [-8, 10, 0]}
         >
           <Capsule />
         </Float>
